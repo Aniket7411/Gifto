@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Password Reset</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Password Reset API Test</h1>
+
+    <div class="test">
+        <h3>1️⃣ Test Forgot Password</h3>
+        <button onclick="testForgotPassword()">Test Forgot Password</button>
+        <div id="forgotResult"></div>
+    </div>
+
+    <div class="test">
+        <h3>2️⃣ Test Reset Password</h3>
+        <button onclick="testResetPassword()">Test Reset Password</button>
+        <div id="resetResult"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        async function testForgotPassword() {
+            const resultDiv = document.getElementById('forgotResult');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: 'test@example.com' })
+                });
+
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ Success!</h4>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Error!</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testResetPassword() {
+            const resultDiv = document.getElementById('resetResult');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/reset-password/test-token-123`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: 'newpassword123' })
+                });
+
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ Success!</h4>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Error!</h4>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Note:</strong> This is expected until backend route is added!</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+
+</html>
